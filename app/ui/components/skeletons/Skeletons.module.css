@@ -1,0 +1,53 @@
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.shimmerEffect {
+  background-image: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgb(125, 125, 125, 0.1) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background-repeat: no-repeat;
+
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: shimmer;
+  animation-timing-function: linear;
+}
+
+.toolbar {
+  /* background-color: var(--mantine-color-blue-light); */
+  background-color: light-dark(#eeeef1, #161b22); /* hardcoded */
+  border-bottom: 1px light-dark(#d8dee4, #2e3239) solid;
+  height: 29px;
+}
+.main {
+  height: 60vh;
+  display: flex;
+}
+
+.editor {
+  background-color: light-dark(#eeeef1, #161b22);
+  height: 100%;
+  width: 50%;
+  border-right: 1px light-dark(#d8dee4, #2e3239) solid;
+}
+
+.preview {
+  background-color: light-dark(#eeeef1, #0d1117);
+  height: 100%;
+  width: 50%;
+}
+
+.code {
+  background-color: light-dark(#e8ebef, #393f48);
+  height: 22.5px;
+}

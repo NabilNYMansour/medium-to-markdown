@@ -1,0 +1,17 @@
+.coffee {
+  text-decoration: none;
+  color: white;
+  display: flex;
+  justify-content: center;
+}
+
+.coffeeInner {
+  background-color: var(--mantine-color-main-9);
+  border-radius: var(--mantine-radius-md);
+  padding: 5px 20px 5px 20px;
+  margin: 0;
+
+  @mixin hover {
+    background-color: var(--mantine-color-main-8);
+  }
+}

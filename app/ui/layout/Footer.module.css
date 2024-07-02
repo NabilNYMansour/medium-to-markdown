@@ -1,0 +1,8 @@
+.footer {
+  padding-top: var(--mantine-spacing-lg);
+  padding-bottom: var(--mantine-spacing-md);
+  margin-top: var(--mantine-spacing-lg);
+
+  display: flex;
+  justify-content: center;
+}

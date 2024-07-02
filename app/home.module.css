@@ -1,0 +1,15 @@
+.body {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: light-dark(#EEEEF1, #161B22);
+  overflow-y: scroll;
+}
+
+.app {
+  padding-top: 81px;
+  flex-grow: 1;
+  display: flex;
+}
+

@@ -1,0 +1,69 @@
+.rootHeader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  height: rem(70px);
+}
+
+.header {
+  padding: 5px;
+  background-color: light-dark(#eeeef1, #161b22); /* hardcoded */
+  border-bottom: 1px light-dark(#d8dee4, #2e3239) solid;
+}
+
+.inner {
+  height: rem(70px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.appTitle {
+  padding: 10px;
+
+  @media (max-width: 56.25em) {
+    font-size: small;
+  }
+}
+
+.button {
+  background-color: #5a586f;
+  color: white;
+  text-decoration: none;
+  
+  border-radius: 30px var(--mantine-radius-default) var(--mantine-radius-default) 30px;
+
+  display: inline-flex;
+  align-items: center;
+  overflow: hidden;
+  width: auto;
+  max-width: 2.5rem;
+  -webkit-transition: max-width 0.5s;
+  transition: max-width 0.5s;
+  height: 44px;
+}
+
+.button:hover {
+  max-width: 50rem;
+}
+
+.icon {
+  padding: 0px 7px;
+  display: flex;
+  align-items: center;
+}
+
+.text {
+  white-space: nowrap;
+  font-size: 20px;
+  padding-right: 7px;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
