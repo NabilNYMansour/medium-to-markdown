@@ -156,15 +156,36 @@ export default function MarkdownRenderer({ toMarkdownAction }:
   }
 
   useEffect(() => {
+    const savedMarkdown = localStorage.getItem("markdown");
+    if (savedMarkdown) {
+      setMarkdown(savedMarkdown);
+    }
+
+    const savedUrl = localStorage.getItem("url");
+    if (savedUrl) {
+      setUrl(savedUrl);
+    }
+  }, []);
+
+  useEffect(() => {
     document.documentElement.setAttribute('data-color-mode', colorScheme);
   }, [colorScheme]);
 
   useEffect(() => {
-    setCopied(false);
+    if (copied) {
+      setCopied(false);
+    }
   }, [markdown, url, loading]);
 
   useEffect(() => {
-    setError({ error: false, errorMsg: "" });
+    localStorage.setItem("markdown", debouncedMarkdown);
+  }, [debouncedMarkdown]);
+
+  useEffect(() => {
+    if (error.error){
+      setError({ error: false, errorMsg: "" });
+    }
+    localStorage.setItem("url", url);
   }, [url]);
 
   return (
