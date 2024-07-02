@@ -188,7 +188,6 @@ function MarkdownActions({ markdown, setMarkdown, copied, setCopied, setUrl, ope
 export default function MarkdownRenderer({ toMarkdownAction }: {
   toMarkdownAction: (url: string) => Promise<{ error: boolean, markdown: string }>
 }) {
-  const [firstRender, setFirstRender] = useState(true);
   const [url, setUrl] = useState("");
   const [error, setError] = useState({ error: false, errorMsg: "" });
   const [markdown, setMarkdown] = useState('');
@@ -201,9 +200,6 @@ export default function MarkdownRenderer({ toMarkdownAction }: {
   const isPhone = useMediaQuery('(max-width: 56.25em)');
 
   const [resetIsOpen, resetActions] = useDisclosure(false);
-
-  useEffect(() => {
-  }, [firstRender])
 
   useEffect(() => {
     const savedMarkdown = localStorage.getItem("markdown");
