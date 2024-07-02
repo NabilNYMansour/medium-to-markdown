@@ -116,7 +116,7 @@ function MarkdownActions({ markdown, setMarkdown, copied, setCopied, setUrl, ope
     onClick: () => setMarkdown(''),
     disabled: disabled,
   }
- 
+
   return (
     <Flex gap={10} mb={10} align="flex-end">
       {isPhone ?
@@ -239,7 +239,8 @@ export default function MarkdownRenderer({ toMarkdownAction }: {
         </div>
       </Container>
 
-      <Modal ta="center" opened={resetIsOpen} onClose={resetActions.close} title={<h3>Reset Markdown?</h3>}>
+      <Modal ta="center" opened={resetIsOpen} onClose={resetActions.close}
+        title={<h3>Reset Markdown?</h3>} centered>
         Clear the markdown content and the url?
         <Flex justify="center" mt={20} gap={10}>
           <Button color="red" variant="filled"
