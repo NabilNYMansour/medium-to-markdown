@@ -21,18 +21,15 @@ const MarkdownEditor = dynamic(
   }
 );
 
-const UrlSearchForm = (
-  { url, setUrl, toMarkdownAction, setMarkdown, setError, error, setLoading, loading, clearUrl }:
-    {
-      url: string, setUrl: (value: string) => void,
-      toMarkdownAction: (url: string) => Promise<{ error: boolean, markdown: string }>,
-      setMarkdown: (value: string) => void,
-      setError: (value: { error: boolean, errorMsg: string }) => void,
-      error: { error: boolean, errorMsg: string }, loading: boolean,
-      setLoading: (value: boolean) => void,
-      clearUrl: () => void
-    }
-) => {
+function UrlSearchForm({ url, setUrl, toMarkdownAction, setMarkdown, setError, error, setLoading, loading, clearUrl }: {
+  url: string, setUrl: (value: string) => void,
+  toMarkdownAction: (url: string) => Promise<{ error: boolean, markdown: string }>,
+  setMarkdown: (value: string) => void,
+  setError: (value: { error: boolean, errorMsg: string }) => void,
+  error: { error: boolean, errorMsg: string }, loading: boolean,
+  setLoading: (value: boolean) => void,
+  clearUrl: () => void
+}) {
   return (
     <form
       action={async () => {
@@ -76,54 +73,56 @@ const UrlSearchForm = (
   );
 }
 
-const MarkdownActions = (
-  { markdown, setMarkdown, copied, setCopied, setUrl, isPhone }: {
-    markdown: string, setMarkdown: (value: string) => void,
-    copied: boolean, setCopied: (value: boolean) => void,
-    setUrl: (value: string) => void, isPhone: boolean | undefined
-  }
-) => {
+function MarkdownActions({ markdown, setMarkdown, copied, setCopied, setUrl, isPhone }: {
+  markdown: string, setMarkdown: (value: string) => void,
+  copied: boolean, setCopied: (value: boolean) => void,
+  setUrl: (value: string) => void, isPhone: boolean | undefined
+}) {
   const copy = () => {
     setCopied(true);
     navigator.clipboard.writeText(markdown);
   }
+
+  const disabled = markdown.length === 0;
+
+  const copyProps = {
+    onClick: copy,
+    variant: 'filled',
+    color: copied ? 'green' : 'blue',
+    disabled: disabled,
+  };
+
+  const copyIcon = copied ? <IconCheck stroke={2} /> : <IconClipboard stroke={2} />;
+  const copyText = copied ? "Copied to Clipboard" : "Copy to Clipboard";
+
+  const clearProps = {
+    variant: 'default',
+    onClick: () => setMarkdown(''),
+    disabled: disabled,
+  }
+
   return (
     <Flex gap={10} mb={10} align="flex-end">
       {isPhone ?
         <>
-          <ActionIcon
-            onClick={copy}
-            size='lg' variant='filled'
-            color={copied ? 'green' : 'blue'}
-            disabled={markdown.length === 0}>
-            {copied ? <IconCheck stroke={2} /> : <IconClipboard stroke={2} />}
+          <ActionIcon size='lg' {...copyProps}>
+            {copyIcon}
           </ActionIcon>
-          <ActionIcon
-            size='lg' variant='default'
-            onClick={() => setMarkdown('')}
-            disabled={markdown.length === 0}>
+          <ActionIcon size='lg'{...clearProps}>
             <IconTrash stroke={2} />
           </ActionIcon>
         </>
         :
         <>
-          <Button
-            onClick={copy}
-            size='xs' variant='filled'
-            color={copied ? 'green' : 'blue'}
-            disabled={markdown.length === 0}
-            leftSection={copied ? <IconCheck stroke={2} /> : <IconClipboard stroke={2} />}>
-            {copied ? "Copied to Clipboard" : "Copy to Clipboard"}
+          <Button size='xs' {...copyProps} leftSection={copyIcon}>
+            {copyText}
           </Button>
-          <Button
-            size='xs' variant='default'
-            onClick={() => setMarkdown('')}
-            disabled={markdown.length === 0}
-            leftSection={<IconTrash stroke={2} />}>
+          <Button size='xs'{...clearProps} leftSection={<IconTrash stroke={2} />}>
             Clear Markdown
           </Button>
         </>
       }
+      {/* Example action icon */}
       <ActionIcon
         ml="auto" color='yellow'
         size='lg' variant='filled'
@@ -134,11 +133,9 @@ const MarkdownActions = (
   );
 }
 
-export default function MarkdownRenderer({ toMarkdownAction }:
-  {
-    toMarkdownAction: (url: string) => Promise<{ error: boolean, markdown: string }>
-  }
-) {
+export default function MarkdownRenderer({ toMarkdownAction }: {
+  toMarkdownAction: (url: string) => Promise<{ error: boolean, markdown: string }>
+}) {
   const [url, setUrl] = useState("");
   const [error, setError] = useState({ error: false, errorMsg: "" });
   const [markdown, setMarkdown] = useState('');
