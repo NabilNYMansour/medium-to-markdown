@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from 'react';
-import { ActionIcon, Container, Flex } from '@mantine/core';
+import { ActionIcon, Container, Flex, Text, Tooltip } from '@mantine/core';
 import { ThemeToggle } from '../components/ThemeToggle';
 import classes from './Header.module.css';
 import { useHover, useMediaQuery } from '@mantine/hooks';
@@ -10,23 +10,33 @@ import { AiFillGithub } from 'react-icons/ai';
 import { DEVELOPER_URL, GITHUB_URL } from '../components/Constants';
 
 const DeveloperAction =
-  () => (<ActionIcon
-    component="a"
-    href={DEVELOPER_URL}
-    target='_blank'
-    color='#5a586f'
-    variant='filled' size="xl">
-    <Image style={{ borderRadius: "500px" }} src="/tree.ico" alt="Nabil Mansour" width={30} height={30} />
-  </ActionIcon>);
+  () => (
+    <Tooltip withArrow openDelay={750}
+      label={<Text fz="xs" lh="md">Developer</Text>}>
+      <ActionIcon
+        component="a"
+        href={DEVELOPER_URL}
+        target='_blank'
+        color='#5a586f'
+        variant='filled' size="xl">
+        <Image style={{ borderRadius: "500px" }} src="/tree.ico" alt="Nabil Mansour" width={30} height={30} />
+      </ActionIcon>
+    </Tooltip>
+  );
 
 const GitHubAction =
-  () => (<ActionIcon
-    component="a"
-    href={GITHUB_URL}
-    target='_blank'
-    variant='default' size="xl">
-    <AiFillGithub size="2em" />
-  </ActionIcon>);
+  () => (
+    <Tooltip withArrow openDelay={750}
+      label={<Text fz="xs" lh="md">GitHub Repo</Text>}>
+      <ActionIcon
+        component="a"
+        href={GITHUB_URL}
+        target='_blank'
+        variant='default' size="xl">
+        <AiFillGithub size="2em" />
+      </ActionIcon>
+    </Tooltip>
+  );
 
 const AppTitle = ({ isPhone }: { isPhone: boolean | undefined }) => (<h1 className={classes.appTitle}>
   <Image src="/favicon.ico" alt="Nabil Mansour" width={48} height={48} />
