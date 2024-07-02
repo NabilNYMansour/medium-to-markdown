@@ -202,7 +202,7 @@ export default function MarkdownRenderer({ toMarkdownAction }: {
     if (copied) {
       setCopied(false);
     }
-  }, [markdown, url, loading]);
+  }, [markdown, url, loading, copied]);
 
   useEffect(() => {
     localStorage.setItem("markdown", debouncedMarkdown);
@@ -213,7 +213,7 @@ export default function MarkdownRenderer({ toMarkdownAction }: {
       setError({ error: false, errorMsg: "" });
     }
     localStorage.setItem("url", url);
-  }, [url]);
+  }, [url, error.error]);
 
   return (
     <Flex justify='flex-start' direction="column" align="center" w="100%">
