@@ -25,6 +25,10 @@
   display: flex;
   align-items: center;
   gap: 10px;
+
+  @media (max-width: 56.25em) {
+    font-size: 0px; /* to avoid hydration mismatch */
+  }
 }
 
 .headerActions {

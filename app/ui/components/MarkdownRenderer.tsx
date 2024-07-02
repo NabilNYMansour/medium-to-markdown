@@ -182,7 +182,7 @@ export default function MarkdownRenderer({ toMarkdownAction }:
   }, [debouncedMarkdown]);
 
   useEffect(() => {
-    if (error.error){
+    if (error.error) {
       setError({ error: false, errorMsg: "" });
     }
     localStorage.setItem("url", url);

@@ -34,7 +34,6 @@ export function Header() {
   const [scrollDir, setScrollDir] = useState<'up' | 'down'>('up');
   const prevScrollVal = useRef(0);
 
-  const developerHover = useHover();
   const isPhone = useMediaQuery('(max-width: 56.25em)');
 
   const headerHover = useHover();
