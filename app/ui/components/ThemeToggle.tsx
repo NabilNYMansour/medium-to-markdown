@@ -9,9 +9,7 @@ export function ThemeToggle() {
 
   return (
     <Group justify="center">
-      <Tooltip
-        withArrow
-        openDelay={750}
+      <Tooltip withArrow openDelay={750}
         label={<Text fz="xs" lh="md">Toggle Theme</Text>}>
         <ActionIcon
           onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}

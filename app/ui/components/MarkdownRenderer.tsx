@@ -4,13 +4,14 @@ import dynamic from 'next/dynamic';
 import '@uiw/react-markdown-editor/markdown-editor.css';
 import '@uiw/react-markdown-preview/markdown.css';
 
-import { ActionIcon, Button, Container, Flex, Modal, TextInput, useComputedColorScheme } from '@mantine/core';
+import { ActionIcon, Button, Container, Flex, Modal, Text, TextInput, Tooltip, useComputedColorScheme } from '@mantine/core';
 import classes from "./MarkdownRenderer.module.css"
 import { useEffect, useState } from 'react';
 import { IconBulb, IconDownload, IconRefresh, IconSearch, IconTrash, IconX } from '@tabler/icons-react';
 import { useDebouncedValue, useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { EditorSkeleton } from './skeletons/Skeletons';
 import { IconClipboard, IconCheck } from '@tabler/icons-react';
+import { INIT_MARKDOWN } from './Constants';
 
 
 const MarkdownEditor = dynamic(
@@ -52,20 +53,24 @@ function UrlSearchForm({ url, setUrl, toMarkdownAction, setMarkdown, setError, e
           onChange={(event) => setUrl(event.currentTarget.value)}
           className={classes.input}
           leftSection={
-            <ActionIcon
-              size='xl' type="submit" variant='default'
-              loading={loading}>
-              <IconSearch stroke={1.5} />
-            </ActionIcon>
-          }
+            <Tooltip withArrow openDelay={750} offset={5}
+              label={<Text fz="xs" lh="md">Search</Text>}>
+              <ActionIcon
+                size='xl' type="submit" variant='default'
+                loading={loading}>
+                <IconSearch stroke={1.5} />
+              </ActionIcon>
+            </Tooltip>}
           rightSection={
-            <ActionIcon
-              radius="xl"
-              size='xl' variant='subtle'
-              onClick={clearUrl}>
-              <IconX stroke={1.5} />
-            </ActionIcon>
-          }
+            <Tooltip withArrow openDelay={750} offset={5}
+              label={<Text fz="xs" lh="md">Clear URL</Text>}>
+              <ActionIcon
+                radius="xl"
+                size='xl' variant='subtle'
+                onClick={clearUrl}>
+                <IconX stroke={1.5} />
+              </ActionIcon>
+            </Tooltip>}
           error={error.error ? error.errorMsg : false}
         />
       </Flex>
@@ -121,15 +126,26 @@ function MarkdownActions({ markdown, setMarkdown, copied, setCopied, setUrl, ope
     <Flex gap={10} mb={10} align="flex-end">
       {isPhone ?
         <>
-          <ActionIcon size='lg' {...copyProps}>
-            {copyIcon}
-          </ActionIcon>
-          <ActionIcon size='lg'{...downloadProps}>
-            <IconDownload size="1.5em" stroke={2} />
-          </ActionIcon>
-          <ActionIcon size='lg'{...clearProps}>
-            <IconTrash size="1.5em" stroke={2} />
-          </ActionIcon>
+          <Tooltip withArrow openDelay={750}
+            label={<Text fz="xs" lh="md">Copy Markdown</Text>}>
+            <ActionIcon size='lg' {...copyProps}>
+              {copyIcon}
+            </ActionIcon>
+          </Tooltip>
+
+          <Tooltip withArrow openDelay={750}
+            label={<Text fz="xs" lh="md">Download Markdown</Text>}>
+            <ActionIcon size='lg'{...downloadProps}>
+              <IconDownload size="1.5em" stroke={2} />
+            </ActionIcon>
+          </Tooltip>
+
+          <Tooltip withArrow openDelay={750}
+            label={<Text fz="xs" lh="md">Clear Markdown</Text>}>
+            <ActionIcon size='lg'{...clearProps}>
+              <IconTrash size="1.5em" stroke={2} />
+            </ActionIcon>
+          </Tooltip>
         </>
         :
         <>
@@ -145,30 +161,39 @@ function MarkdownActions({ markdown, setMarkdown, copied, setCopied, setUrl, ope
         </>
       }
 
-      <ActionIcon
-        ml="auto" color='yellow'
-        size='lg' variant='filled'
-        onClick={() => setUrl("https://medium.com/@nabilnymansour/cone-marching-in-three-js-6d54eac17ad4")}>
-        <IconBulb stroke={2} />
-      </ActionIcon>
-      <ActionIcon
-        color='red'
-        size='lg' variant='filled'
-        onClick={openReset}>
-        <IconRefresh stroke={2} />
-      </ActionIcon>
-    </Flex>
+      <Tooltip withArrow openDelay={750}
+        label={<Text fz="xs" lh="md">Example URL</Text>}>
+        <ActionIcon
+          ml="auto" color='yellow'
+          size='lg' variant='filled'
+          onClick={() => setUrl("https://medium.com/@nabilnymansour/cone-marching-in-three-js-6d54eac17ad4")}>
+          <IconBulb stroke={2} />
+        </ActionIcon>
+      </Tooltip>
+
+      <Tooltip withArrow openDelay={750}
+        label={<Text fz="xs" lh="md">Reset Scene</Text>}>
+        <ActionIcon
+          color='red'
+          size='lg' variant='filled'
+          onClick={openReset}>
+          <IconRefresh stroke={2} />
+        </ActionIcon>
+      </Tooltip>
+
+    </Flex >
   );
 }
 
 export default function MarkdownRenderer({ toMarkdownAction }: {
   toMarkdownAction: (url: string) => Promise<{ error: boolean, markdown: string }>
 }) {
+  const [firstRender, setFirstRender] = useState(true);
   const [url, setUrl] = useState("");
   const [error, setError] = useState({ error: false, errorMsg: "" });
   const [markdown, setMarkdown] = useState('');
   const [loading, setLoading] = useState(false);
-  
+
   const [debouncedMarkdown] = useDebouncedValue(markdown, 200);
   const [copied, setCopied] = useState(false);
 
@@ -177,10 +202,8 @@ export default function MarkdownRenderer({ toMarkdownAction }: {
 
   const [resetIsOpen, resetActions] = useDisclosure(false);
 
-  const clearUrl = () => {
-    setUrl("");
-    setError({ error: false, errorMsg: "" });
-  }
+  useEffect(() => {
+  }, [firstRender])
 
   useEffect(() => {
     const savedMarkdown = localStorage.getItem("markdown");
@@ -191,6 +214,12 @@ export default function MarkdownRenderer({ toMarkdownAction }: {
     const savedUrl = localStorage.getItem("url");
     if (savedUrl) {
       setUrl(savedUrl);
+    }
+
+    const hasRenderedBefore = localStorage.getItem("hasRenderedBefore");
+    if (!hasRenderedBefore) {
+      localStorage.setItem("hasRenderedBefore", "true");
+      setMarkdown(INIT_MARKDOWN);
     }
   }, []);
 
@@ -214,6 +243,11 @@ export default function MarkdownRenderer({ toMarkdownAction }: {
     }
     localStorage.setItem("url", url);
   }, [url]);
+
+  const clearUrl = () => {
+    setUrl("");
+    setError({ error: false, errorMsg: "" });
+  }
 
   return (
     <Flex justify='flex-start' direction="column" align="center" w="100%">
@@ -240,7 +274,7 @@ export default function MarkdownRenderer({ toMarkdownAction }: {
       </Container>
 
       <Modal ta="center" opened={resetIsOpen} onClose={resetActions.close}
-        title={<h3>Reset Markdown?</h3>} centered>
+        title={<b>Reset Markdown?</b>} centered>
         Clear the markdown content and the url?
         <Flex justify="center" mt={20} gap={10}>
           <Button color="red" variant="filled"
