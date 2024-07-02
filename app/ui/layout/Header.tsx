@@ -28,6 +28,11 @@ const GitHubAction =
     <AiFillGithub size="2em" />
   </ActionIcon>);
 
+const AppTitle = ({ isPhone }: { isPhone: boolean | undefined }) => (<h1 className={classes.appTitle}>
+  <Image src="/favicon.ico" alt="Nabil Mansour" width={48} height={48} />
+  {!isPhone && "Medium to Markdown"}
+</h1>);
+
 export function Header() {
   const [isHeaderVisible, setHeaderVisible] = useState(true);
   const [checkHeader, setCheckHeader] = useState(true);
@@ -87,10 +92,7 @@ export function Header() {
       <div ref={headerHover.ref} className={classes.rootHeader}>
         <div className={classes.header} style={slideUp} >
           <Container size="xl" className={classes.inner}>
-            <h1 className={classes.appTitle}>
-              <Image src="/favicon.ico" alt="Nabil Mansour" width={48} height={48} />
-              {!isPhone && "Medium to Markdown"}
-            </h1>
+            <AppTitle isPhone={isPhone} />
             <div className={classes.headerActions}>
               <DeveloperAction />
               <GitHubAction />
