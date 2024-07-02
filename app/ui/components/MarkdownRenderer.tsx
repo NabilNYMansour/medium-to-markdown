@@ -4,11 +4,11 @@ import dynamic from 'next/dynamic';
 import '@uiw/react-markdown-editor/markdown-editor.css';
 import '@uiw/react-markdown-preview/markdown.css';
 
-import { ActionIcon, Button, Container, Flex, TextInput, useComputedColorScheme } from '@mantine/core';
+import { ActionIcon, Button, Container, Flex, Modal, TextInput, useComputedColorScheme } from '@mantine/core';
 import classes from "./MarkdownRenderer.module.css"
 import { useEffect, useState } from 'react';
-import { IconBulb, IconSearch, IconTrash, IconX } from '@tabler/icons-react';
-import { useDebouncedValue, useMediaQuery } from '@mantine/hooks';
+import { IconBulb, IconDownload, IconRefresh, IconSearch, IconTrash, IconX } from '@tabler/icons-react';
+import { useDebouncedValue, useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { EditorSkeleton } from './skeletons/Skeletons';
 import { IconClipboard, IconCheck } from '@tabler/icons-react';
 
@@ -73,10 +73,21 @@ function UrlSearchForm({ url, setUrl, toMarkdownAction, setMarkdown, setError, e
   );
 }
 
-function MarkdownActions({ markdown, setMarkdown, copied, setCopied, setUrl, isPhone }: {
+const downloadMarkdown = (markdown: string) => {
+  const fileName = "medium.md";
+  const blob = new Blob([markdown], { type: 'text/plain' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = fileName;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+
+function MarkdownActions({ markdown, setMarkdown, copied, setCopied, setUrl, openReset, isPhone }: {
   markdown: string, setMarkdown: (value: string) => void,
   copied: boolean, setCopied: (value: boolean) => void,
-  setUrl: (value: string) => void, isPhone: boolean | undefined
+  setUrl: (value: string) => void, openReset: () => void, isPhone: boolean | undefined
 }) {
   const copy = () => {
     setCopied(true);
@@ -92,15 +103,20 @@ function MarkdownActions({ markdown, setMarkdown, copied, setCopied, setUrl, isP
     disabled: disabled,
   };
 
-  const copyIcon = copied ? <IconCheck stroke={2} /> : <IconClipboard stroke={2} />;
+  const copyIcon = copied ? <IconCheck size="1.5em" stroke={2} /> : <IconClipboard size="1.5em" stroke={2} />;
   const copyText = copied ? "Copied to Clipboard" : "Copy to Clipboard";
+
+  const downloadProps = {
+    onClick: () => downloadMarkdown(markdown),
+    disabled: disabled,
+  }
 
   const clearProps = {
     variant: 'default',
     onClick: () => setMarkdown(''),
     disabled: disabled,
   }
-
+ 
   return (
     <Flex gap={10} mb={10} align="flex-end">
       {isPhone ?
@@ -108,8 +124,11 @@ function MarkdownActions({ markdown, setMarkdown, copied, setCopied, setUrl, isP
           <ActionIcon size='lg' {...copyProps}>
             {copyIcon}
           </ActionIcon>
+          <ActionIcon size='lg'{...downloadProps}>
+            <IconDownload size="1.5em" stroke={2} />
+          </ActionIcon>
           <ActionIcon size='lg'{...clearProps}>
-            <IconTrash stroke={2} />
+            <IconTrash size="1.5em" stroke={2} />
           </ActionIcon>
         </>
         :
@@ -117,17 +136,26 @@ function MarkdownActions({ markdown, setMarkdown, copied, setCopied, setUrl, isP
           <Button size='xs' {...copyProps} leftSection={copyIcon}>
             {copyText}
           </Button>
-          <Button size='xs'{...clearProps} leftSection={<IconTrash stroke={2} />}>
+          <Button size='xs' {...downloadProps} leftSection={<IconDownload size="1.5em" stroke={2} />}>
+            Download Markdown
+          </Button>
+          <Button size='xs'{...clearProps} leftSection={<IconTrash size="1.5em" stroke={2} />}>
             Clear Markdown
           </Button>
         </>
       }
-      {/* Example action icon */}
+
       <ActionIcon
         ml="auto" color='yellow'
         size='lg' variant='filled'
         onClick={() => setUrl("https://medium.com/@nabilnymansour/cone-marching-in-three-js-6d54eac17ad4")}>
         <IconBulb stroke={2} />
+      </ActionIcon>
+      <ActionIcon
+        color='red'
+        size='lg' variant='filled'
+        onClick={openReset}>
+        <IconRefresh stroke={2} />
       </ActionIcon>
     </Flex>
   );
@@ -146,6 +174,8 @@ export default function MarkdownRenderer({ toMarkdownAction }: {
 
   const colorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
   const isPhone = useMediaQuery('(max-width: 56.25em)');
+
+  const [resetIsOpen, resetActions] = useDisclosure(false);
 
   const clearUrl = () => {
     setUrl("");
@@ -199,7 +229,7 @@ export default function MarkdownRenderer({ toMarkdownAction }: {
           <MarkdownActions
             markdown={debouncedMarkdown} setMarkdown={setMarkdown}
             copied={copied} setCopied={setCopied} setUrl={setUrl}
-            isPhone={isPhone} />
+            openReset={resetActions.open} isPhone={isPhone} />
           <MarkdownEditor
             className={classes.markdownEditor}
             height='60vh'
@@ -208,6 +238,21 @@ export default function MarkdownRenderer({ toMarkdownAction }: {
             visible enableScroll previewWidth={isPhone ? "100%" : "50%"} />
         </div>
       </Container>
+
+      <Modal ta="center" opened={resetIsOpen} onClose={resetActions.close} title={<h3>Reset Markdown?</h3>}>
+        Clear the markdown content and the url?
+        <Flex justify="center" mt={20} gap={10}>
+          <Button color="red" variant="filled"
+            onClick={() => {
+              setMarkdown("");
+              setUrl("");
+              resetActions.close();
+            }}>
+            Reset
+          </Button>
+          <Button onClick={resetActions.close} variant="light">Cancel</Button>
+        </Flex>
+      </Modal>
     </Flex>
   );
 }
