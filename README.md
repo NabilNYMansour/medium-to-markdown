@@ -1,5 +1,7 @@
 # Medium to Markdown
 
+![Medium to Markdown](public/med2mark.png)
+
 ## Description
 A web app that allows users to convert Medium articles into Markdown format by providing the link.
 You can see the app in action here: [https://medium2md.nabilmansour.com/](https://medium2md.nabilmansour.com/)
