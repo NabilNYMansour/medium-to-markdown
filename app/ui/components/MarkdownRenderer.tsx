@@ -167,10 +167,10 @@ export default function MarkdownRenderer({ toMarkdownAction }: {
   const [url, setUrl] = useState("");
   const [error, setError] = useState({ error: false, errorMsg: "" });
   const [markdown, setMarkdown] = useState('');
+  const [loading, setLoading] = useState(false);
+  
   const [debouncedMarkdown] = useDebouncedValue(markdown, 200);
   const [copied, setCopied] = useState(false);
-
-  const [loading, setLoading] = useState(false);
 
   const colorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
   const isPhone = useMediaQuery('(max-width: 56.25em)');
@@ -202,7 +202,7 @@ export default function MarkdownRenderer({ toMarkdownAction }: {
     if (copied) {
       setCopied(false);
     }
-  }, [markdown, url, loading, copied]);
+  }, [markdown, url, loading]);
 
   useEffect(() => {
     localStorage.setItem("markdown", debouncedMarkdown);
@@ -213,7 +213,7 @@ export default function MarkdownRenderer({ toMarkdownAction }: {
       setError({ error: false, errorMsg: "" });
     }
     localStorage.setItem("url", url);
-  }, [url, error.error]);
+  }, [url]);
 
   return (
     <Flex justify='flex-start' direction="column" align="center" w="100%">
@@ -247,6 +247,7 @@ export default function MarkdownRenderer({ toMarkdownAction }: {
             onClick={() => {
               setMarkdown("");
               setUrl("");
+              setError({ error: false, errorMsg: "" });
               resetActions.close();
             }}>
             Reset
