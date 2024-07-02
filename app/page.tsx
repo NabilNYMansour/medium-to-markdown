@@ -19,13 +19,13 @@ export default function HomePage() {
     <Container size="lg">
       <h2>How does this work?</h2>
       <p>
-        This is a simple web app that converts a <b>Medium</b> article to <b>Markdown</b>. Just paste the URL of the article you want to convert and click the "send" button. The app will fetch the article, convert it to Markdown, and display it for you to copy.
+        This is a simple web app that converts a <b>Medium</b> article to <b>Markdown</b>. Just paste the URL of the article you want to convert and click the &quot;send&quot; button. The app will fetch the article, convert it to Markdown, and display it for you to copy.
       </p>
       <h2>Why?</h2>
       <div>
         I wanted to convert some of my Medium articles to Markdown so I could publish them on
         my <Link className={classes.link} href={`${DEVELOPER_URL}/articles`}>personal website</Link>.
-        I couldn't find a tool that did this in an easy way, so I built one myself.
+        I couldn&apos;t find a tool that did this in an easy way, so I built one myself.
       </div>
       <h2>How?</h2>
       <div style={{ lineHeight: "190%" }}>
