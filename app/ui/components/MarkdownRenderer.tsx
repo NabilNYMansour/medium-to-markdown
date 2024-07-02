@@ -116,7 +116,7 @@ function MarkdownActions({ markdown, setMarkdown, copied, setCopied, setUrl, ope
     onClick: () => setMarkdown(''),
     disabled: disabled,
   }
-
+ 
   return (
     <Flex gap={10} mb={10} align="flex-end">
       {isPhone ?
