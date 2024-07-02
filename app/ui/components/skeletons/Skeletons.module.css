@@ -49,5 +49,6 @@
 
 .code {
   background-color: light-dark(#e8ebef, #393f48);
+  margin-top: 4px;
   height: 22.5px;
 }

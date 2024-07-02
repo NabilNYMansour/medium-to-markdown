@@ -57,7 +57,7 @@ export function Header() {
 
   const slideUp = {
     transform: isHeaderVisible ? 'translateY(0)' : 'translateY(-100%)',
-    transition: "transform ease 0.1s"
+    transition: "transform ease 0.25s"
   };
 
   const fadeOut = {
@@ -83,7 +83,6 @@ export function Header() {
             <h1 style={developerHover.hovered && isPhone ? fadeOut : fadeIn} className={classes.appTitle}>
               Medium to Markdown
             </h1>
-
             <div className={classes.headerActions}>
               <div className={classes.developerContainer} ref={developerHover.ref}>
                 <a className={classes.button} href="https://nabilmansour.com" target='_blank'>

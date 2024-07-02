@@ -15,8 +15,7 @@ export default function NotFound() {
           <Link key="Home" href="/" className={classes.link}>
             <Button
               variant="white"
-              size="md"
-            >
+              size="md">
               Back to Home
             </Button>
           </Link>

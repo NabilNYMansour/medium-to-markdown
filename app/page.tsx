@@ -4,11 +4,12 @@ import { Badge, Container, Flex } from "@mantine/core";
 import { SiGithub, SiNextdotjs } from "react-icons/si";
 import classes from './globals.module.css';
 import Link from "next/link";
+import BuyMeCoffee from "./ui/components/BuyMeCoffee";
 
 const toMarkdownAction = async (url: string) => {
   "use server";
   await new Promise((resolve) => setTimeout(resolve, 2000));
-  return await getMediumMD(url) as string;
+  return await getMediumMD(url) as { error: boolean, markdown: string };
 };
 
 export default function HomePage() {
@@ -30,7 +31,7 @@ export default function HomePage() {
         and <a className={classes.link}
           href="https://github.com/mixmark-io/turndown" target="_blank" rel="noopener noreferrer">
           Turndown
-        </a> for the conversion from HTML to Markdown. You can also find the code for this app by clicking
+        </a> for the conversion from HTML to Markdown. You can also find the code for it by clicking
         the <a href="github.com" target="_blank" rel="noopener noreferrer" className={classes.link}
         > <Badge size="lg" color="gray" leftSection={<SiGithub />}>GITHUB</Badge></a> link in the header.
       </div>
@@ -39,6 +40,12 @@ export default function HomePage() {
         iframes and other embedded content are not supported. Instead you will see
         <code>[other]&lt;caption&gt;[\other]</code> in its place in the Markdown output.
       </div>
+      <h2>Can I support you?</h2>
+      <div>
+        Sure! You can support me by sharing this tool with your friends or by contributing to the codebase on GitHub.
+        And if anything, you can always
+      </div>
+      <BuyMeCoffee />
     </Container>
   </Flex>
 }

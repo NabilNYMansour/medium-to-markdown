@@ -19,10 +19,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        <ColorSchemeScript defaultColorScheme="dark" />
+        <ColorSchemeScript defaultColorScheme="light" />
       </head>
       <body className={cx(classes.body, CaviarDreams.className)}>
-        <MantineProvider defaultColorScheme="dark" theme={theme}>
+        <MantineProvider defaultColorScheme="light" theme={theme}>
           <Header />
           <div className={classes.app}>
             {children}

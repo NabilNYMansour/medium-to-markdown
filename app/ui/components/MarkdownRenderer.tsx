@@ -7,11 +7,10 @@ import '@uiw/react-markdown-preview/markdown.css';
 import { ActionIcon, Button, Container, Flex, TextInput, useComputedColorScheme } from '@mantine/core';
 import classes from "./MarkdownRenderer.module.css"
 import { useEffect, useState } from 'react';
-import { IconClearAll, IconSend2 } from '@tabler/icons-react';
+import { IconBulb, IconSearch, IconTrash, IconX } from '@tabler/icons-react';
 import { useDebouncedValue, useMediaQuery } from '@mantine/hooks';
 import { EditorSkeleton } from './skeletons/Skeletons';
 import { IconClipboard, IconCheck } from '@tabler/icons-react';
-import { AiFillGithub } from "react-icons/ai";
 
 
 const MarkdownEditor = dynamic(
@@ -22,74 +21,139 @@ const MarkdownEditor = dynamic(
   }
 );
 
+const UrlSearchForm = (
+  { url, setUrl, toMarkdownAction, setMarkdown, setError, error, setLoading, loading, clearUrl }:
+    {
+      url: string, setUrl: (value: string) => void,
+      toMarkdownAction: (url: string) => Promise<{ error: boolean, markdown: string }>,
+      setMarkdown: (value: string) => void,
+      setError: (value: { error: boolean, errorMsg: string }) => void,
+      error: { error: boolean, errorMsg: string }, loading: boolean,
+      setLoading: (value: boolean) => void,
+      clearUrl: () => void
+    }
+) => {
+  return (
+    <form
+      action={async () => {
+        const content = await toMarkdownAction(url);
+        setLoading(false);
+        if (content.error) {
+          setError({ error: true, errorMsg: content.markdown });
+          return;
+        }
+        setError({ error: false, errorMsg: "" });
+        setMarkdown(content.markdown);
+      }}
+      onSubmit={() => setLoading(true)}>
+      <Flex justify='center' align="center" miw="50vw" p={25} gap={25} direction="column">
+        <TextInput
+          classNames={{ error: classes.error }}
+          w="100%" variant='default' size='xl'
+          placeholder="Enter a medium article url"
+          value={url} type='url'
+          onChange={(event) => setUrl(event.currentTarget.value)}
+          className={classes.input}
+          leftSection={
+            <ActionIcon
+              size='xl' type="submit" variant='default'
+              loading={loading}>
+              <IconSearch stroke={1.5} />
+            </ActionIcon>
+          }
+          rightSection={
+            <ActionIcon
+              radius="xl"
+              size='xl' variant='subtle'
+              onClick={clearUrl}>
+              <IconX stroke={1.5} />
+            </ActionIcon>
+          }
+          error={error.error ? error.errorMsg : false}
+        />
+      </Flex>
+    </form>
+  );
+}
+
 const MarkdownActions = (
-  { markdown, setMarkdown, copied, setCopied, fullscreen, setFullscreen, isPhone }: {
+  { markdown, setMarkdown, copied, setCopied, setUrl, isPhone }: {
     markdown: string, setMarkdown: (value: string) => void,
     copied: boolean, setCopied: (value: boolean) => void,
-    fullscreen: boolean, setFullscreen: (value: boolean) => void,
-    isPhone: boolean | undefined
+    setUrl: (value: string) => void, isPhone: boolean | undefined
   }
 ) => {
-  const disabled = markdown.length === 0;
+  const copy = () => {
+    setCopied(true);
+    navigator.clipboard.writeText(markdown);
+  }
   return (
-    <Flex gap={10} mb={10}>
+    <Flex gap={10} mb={10} align="flex-end">
       {isPhone ?
         <>
           <ActionIcon
+            onClick={copy}
             size='lg' variant='filled'
             color={copied ? 'green' : 'blue'}
-            onClick={() => {
-              setCopied(true);
-              navigator.clipboard.writeText(markdown);
-            }}
-            disabled={disabled}>
+            disabled={markdown.length === 0}>
             {copied ? <IconCheck stroke={2} /> : <IconClipboard stroke={2} />}
           </ActionIcon>
           <ActionIcon
             size='lg' variant='default'
             onClick={() => setMarkdown('')}
-            disabled={disabled}>
-            <IconClearAll stroke={2} />
+            disabled={markdown.length === 0}>
+            <IconTrash stroke={2} />
           </ActionIcon>
         </>
         :
         <>
           <Button
+            onClick={copy}
             size='xs' variant='filled'
             color={copied ? 'green' : 'blue'}
-            onClick={() => {
-              setCopied(true);
-              navigator.clipboard.writeText(markdown);
-            }}
-            disabled={disabled}
+            disabled={markdown.length === 0}
             leftSection={copied ? <IconCheck stroke={2} /> : <IconClipboard stroke={2} />}>
             {copied ? "Copied to Clipboard" : "Copy to Clipboard"}
           </Button>
           <Button
             size='xs' variant='default'
             onClick={() => setMarkdown('')}
-            disabled={disabled}
-            leftSection={<IconClearAll stroke={2} />}>
+            disabled={markdown.length === 0}
+            leftSection={<IconTrash stroke={2} />}>
             Clear Markdown
           </Button>
         </>
       }
+      <ActionIcon
+        ml="auto" color='yellow'
+        size='lg' variant='filled'
+        onClick={() => setUrl("https://medium.com/@nabilnymansour/cone-marching-in-three-js-6d54eac17ad4")}>
+        <IconBulb stroke={2} />
+      </ActionIcon>
     </Flex>
   );
 }
 
-export default function MarkdownRenderer({ toMarkdownAction }: { toMarkdownAction: (url: string) => Promise<string> }) {
-  const [url, setUrl] = useState("https://medium.com/@nabilnymansour/cone-marching-in-three-js-6d54eac17ad4");
-
+export default function MarkdownRenderer({ toMarkdownAction }:
+  {
+    toMarkdownAction: (url: string) => Promise<{ error: boolean, markdown: string }>
+  }
+) {
+  const [url, setUrl] = useState("");
+  const [error, setError] = useState({ error: false, errorMsg: "" });
   const [markdown, setMarkdown] = useState('');
   const [debouncedMarkdown] = useDebouncedValue(markdown, 200);
   const [copied, setCopied] = useState(false);
-  const [fullscreen, setFullscreen] = useState(false);
 
   const [loading, setLoading] = useState(false);
 
   const colorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
   const isPhone = useMediaQuery('(max-width: 56.25em)');
+
+  const clearUrl = () => {
+    setUrl("");
+    setError({ error: false, errorMsg: "" });
+  }
 
   useEffect(() => {
     document.documentElement.setAttribute('data-color-mode', colorScheme);
@@ -99,38 +163,24 @@ export default function MarkdownRenderer({ toMarkdownAction }: { toMarkdownActio
     setCopied(false);
   }, [markdown, url, loading]);
 
+  useEffect(() => {
+    setError({ error: false, errorMsg: "" });
+  }, [url]);
+
   return (
     <Flex justify='flex-start' direction="column" align="center" w="100%">
-      <form
-        action={async () => {
-          const content = await toMarkdownAction(url);
-          setLoading(false);
-          setMarkdown(content);
-        }}
-        onSubmit={() => setLoading(true)}>
-        <Flex justify='center' align="center" miw="50vw" p={25} gap={25} direction="column">
-          <TextInput
-            w="100%" variant='subtle' size='xl'
-            placeholder="Enter a medium article url"
-            value={url} type='url'
-            onChange={(event) => setUrl(event.currentTarget.value)}
-            className={classes.input}
-            rightSection={
-              <ActionIcon
-                size='xl' type="submit" variant='filled'
-                loading={loading}>
-                <IconSend2 stroke={1.5} />
-              </ActionIcon>
-            }
-          />
-        </Flex>
-      </form>
+      <UrlSearchForm
+        url={url} setUrl={setUrl}
+        toMarkdownAction={toMarkdownAction}
+        setMarkdown={setMarkdown}
+        setError={setError} error={error}
+        loading={loading} setLoading={setLoading}
+        clearUrl={clearUrl} />
       <Container size="xl" w="100%">
         <div className={classes.markdownWrapper}>
           <MarkdownActions
             markdown={debouncedMarkdown} setMarkdown={setMarkdown}
-            copied={copied} setCopied={setCopied}
-            fullscreen={fullscreen} setFullscreen={setFullscreen}
+            copied={copied} setCopied={setCopied} setUrl={setUrl}
             isPhone={isPhone} />
           <MarkdownEditor
             className={classes.markdownEditor}
