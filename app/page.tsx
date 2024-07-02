@@ -5,6 +5,7 @@ import { SiGithub, SiNextdotjs } from "react-icons/si";
 import classes from './globals.module.css';
 import Link from "next/link";
 import BuyMeCoffee from "./ui/components/BuyMeCoffee";
+import { DEVELOPER_URL, GITHUB_URL } from "./ui/components/Constants";
 
 const toMarkdownAction = async (url: string) => {
   "use server";
@@ -22,7 +23,8 @@ export default function HomePage() {
       </p>
       <h2>Why?</h2>
       <div>
-        I wanted to convert some of my Medium articles to Markdown so I could publish them on my <Link className={classes.link} href="https://nabilmansour.com/articles">personal website</Link>.
+        I wanted to convert some of my Medium articles to Markdown so I could publish them on
+        my <Link className={classes.link} href={`${DEVELOPER_URL}/articles`}>personal website</Link>.
         I couldn't find a tool that did this in an easy way, so I built one myself.
       </div>
       <h2>How?</h2>
@@ -32,7 +34,7 @@ export default function HomePage() {
           href="https://github.com/mixmark-io/turndown" target="_blank" rel="noopener noreferrer">
           Turndown
         </a> for the conversion from HTML to Markdown. You can also find the code for it by clicking
-        the <a href="github.com" target="_blank" rel="noopener noreferrer" className={classes.link}
+        the <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={classes.link}
         > <Badge size="lg" color="gray" leftSection={<SiGithub />}>GITHUB</Badge></a> link in the header.
       </div>
       <h2>Any Issues?</h2>

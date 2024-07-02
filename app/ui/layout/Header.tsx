@@ -7,6 +7,26 @@ import classes from './Header.module.css';
 import { useHover, useMediaQuery } from '@mantine/hooks';
 import Image from 'next/image';
 import { AiFillGithub } from 'react-icons/ai';
+import { DEVELOPER_URL, GITHUB_URL } from '../components/Constants';
+
+const DeveloperAction =
+  () => (<ActionIcon
+    component="a"
+    href={DEVELOPER_URL}
+    target='_blank'
+    color='#5a586f'
+    variant='filled' size="xl">
+    <Image style={{ borderRadius: "500px" }} src="/tree.ico" alt="Nabil Mansour" width={30} height={30} />
+  </ActionIcon>);
+
+const GitHubAction =
+  () => (<ActionIcon
+    component="a"
+    href={GITHUB_URL}
+    target='_blank'
+    variant='default' size="xl">
+    <AiFillGithub size="2em" />
+  </ActionIcon>);
 
 export function Header() {
   const [isHeaderVisible, setHeaderVisible] = useState(true);
@@ -18,7 +38,6 @@ export function Header() {
   const isPhone = useMediaQuery('(max-width: 56.25em)');
 
   const headerHover = useHover();
-
 
   const handleScroll = () => {
     if (window.scrollY < 350) {
@@ -60,17 +79,6 @@ export function Header() {
     transition: "transform ease 0.25s"
   };
 
-  const fadeOut = {
-    opacity: 0,
-    transition: "opacity ease 0.1s"
-  };
-
-  const fadeIn = {
-    opacity: 1,
-    transition: "opacity ease 0.5s",
-    transitionDelay: "1s"
-  };
-
   useEffect(() => {
     setScrollDir("up");
   }, [headerHover.hovered]);
@@ -80,21 +88,13 @@ export function Header() {
       <div ref={headerHover.ref} className={classes.rootHeader}>
         <div className={classes.header} style={slideUp} >
           <Container size="xl" className={classes.inner}>
-            <h1 style={developerHover.hovered && isPhone ? fadeOut : fadeIn} className={classes.appTitle}>
-              Medium to Markdown
+            <h1 className={classes.appTitle}>
+              <Image src="/favicon.ico" alt="Nabil Mansour" width={48} height={48} />
+              {!isPhone && "Medium to Markdown"}
             </h1>
             <div className={classes.headerActions}>
-              <div className={classes.developerContainer} ref={developerHover.ref}>
-                <a className={classes.button} href="https://nabilmansour.com" target='_blank'>
-                  <span className={classes.icon}>
-                    <Image style={{ borderRadius: "500px" }} src="/tree.ico" alt="Nabil Mansour" width={25} height={25} />
-                  </span>
-                  <span className={classes.text}>Developer</span>
-                </a>
-              </div>
-              <ActionIcon variant='default' size="xl" color='red'>
-                <AiFillGithub size="2em" />
-              </ActionIcon>
+              <DeveloperAction />
+              <GitHubAction />
               <ThemeToggle />
             </div>
           </Container>
