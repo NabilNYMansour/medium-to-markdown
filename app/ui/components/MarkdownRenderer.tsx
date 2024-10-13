@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
 import { IconBulb, IconDownload, IconRefresh, IconSearch, IconTrash, IconX } from '@tabler/icons-react';
 import { useDebouncedValue, useDisclosure, useMediaQuery } from '@mantine/hooks';
 import { EditorSkeleton } from './skeletons/Skeletons';
-import { IconClipboard, IconCheck } from '@tabler/icons-react';
+import { IconClipboard, IconCheck, IconCoffee } from '@tabler/icons-react';
 import { INIT_MARKDOWN } from './Constants';
 
 
@@ -122,6 +122,11 @@ function MarkdownActions({ markdown, setMarkdown, copied, setCopied, setUrl, ope
     disabled: disabled,
   }
 
+  const buyMeCoffeeProps = {
+    color: '#5A586F',
+    onClick: () => window.open("https://buymeacoffee.com/nabilmansour"),
+  }
+
   return (
     <Flex gap={10} mb={10} align="flex-end">
       {isPhone ?
@@ -146,6 +151,13 @@ function MarkdownActions({ markdown, setMarkdown, copied, setCopied, setUrl, ope
               <IconTrash size="1.5em" stroke={2} />
             </ActionIcon>
           </Tooltip>
+
+          <Tooltip withArrow openDelay={750}
+            label={<Text fz="xs" lh="md">Buy Me a Coffee</Text>}>
+            <ActionIcon size='lg'{...buyMeCoffeeProps}>
+              <IconCoffee size="1.5em" />
+            </ActionIcon>
+          </Tooltip>
         </>
         :
         <>
@@ -157,6 +169,9 @@ function MarkdownActions({ markdown, setMarkdown, copied, setCopied, setUrl, ope
           </Button>
           <Button size='xs'{...clearProps} leftSection={<IconTrash size="1.5em" stroke={2} />}>
             Clear Markdown
+          </Button>
+          <Button size='xs'{...buyMeCoffeeProps} leftSection={<IconCoffee size="1.5em" />}>
+            Buy Me a Coffee
           </Button>
         </>
       }
