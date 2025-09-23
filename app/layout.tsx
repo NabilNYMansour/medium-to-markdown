@@ -15,7 +15,7 @@ const description = "Convert Medium articles to Markdown online for free. No sig
 const title = "Medium to Markdown";
 const author = "Nabil Mansour";
 
-const MAIN_URL = process.env.MAIN_URL;
+const MAIN_URL = `https://${process.env.MAIN_URL}`;
 const imageLink = `${MAIN_URL}/med2mark.png`;
 
 export const metadata: Metadata = {
