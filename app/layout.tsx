@@ -16,11 +16,12 @@ const title = "Medium to Markdown";
 const author = "Nabil Mansour";
 
 const MAIN_URL = process.env.MAIN_URL;
+const imageLink = `${MAIN_URL}/med2mark.png`;
 
 export const metadata: Metadata = {
   title,
   description,
-  alternates: { canonical: MAIN_URL },
+  alternates: { canonical: `${MAIN_URL}` },
   keywords: "Medium, Markdown, Articles, .md, Convert, Online, Free, Turndown, HTML, Next.js, Nabil Mansour",
   openGraph: {
     title,
@@ -28,14 +29,14 @@ export const metadata: Metadata = {
     description,
     url: MAIN_URL,
     type: "website",
-    images: [{ url: "/med2mark.png", alt: title }],
+    images: [{ url: imageLink, alt: title }],
     locale: 'en_US',
   },
   twitter: {
     card: "summary_large_image",
     title,
     description,
-    images: ["/med2mark.png"],
+    images: [imageLink],
   },
   authors: { name: author },
   creator: author,
