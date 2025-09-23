@@ -4,7 +4,7 @@ import { IconSun, IconMoon } from '@tabler/icons-react';
 import classes from './ThemeToggle.module.css';
 
 export function ThemeToggle() {
-  const { setColorScheme } = useMantineColorScheme();
+  const { setColorScheme } = useMantineColorScheme();``
   const computedColorScheme = useComputedColorScheme('light', { getInitialValueInEffect: true });
 
   return (
