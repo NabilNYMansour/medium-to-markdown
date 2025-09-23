@@ -27,19 +27,19 @@ export const metadata: Metadata = {
     description,
     url: MAIN_URL,
     type: "website",
-    images: [{ url: `${MAIN_URL}/med2mark.png`, alt: title }],
+    images: [{ url: "/med2mark.png", alt: title }],
     locale: 'en_US',
   },
   twitter: {
     card: "summary_large_image",
     title,
     description,
-    images: [`${MAIN_URL}/med2mark.png`],
+    images: ["/med2mark.png"],
   },
   authors: { name: author },
   creator: author,
   publisher: author,
-  manifest: `${MAIN_URL}/manifest.json`,
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
