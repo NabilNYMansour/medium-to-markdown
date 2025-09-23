@@ -24,6 +24,7 @@ export const metadata: Metadata = {
   keywords: "Medium, Markdown, Articles, .md, Convert, Online, Free, Turndown, HTML, Next.js, Nabil Mansour",
   openGraph: {
     title,
+    siteName: title,
     description,
     url: MAIN_URL,
     type: "website",
